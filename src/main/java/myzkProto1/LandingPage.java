@@ -13,7 +13,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Grid;
 
-public class MyPageComposer extends SelectorComposer<Window> {
+public class LandingPage extends SelectorComposer<Window> {
 
 
 	@Wire 
@@ -44,14 +44,30 @@ public class MyPageComposer extends SelectorComposer<Window> {
 
 			//Creation of a new row and add labels to it
 			Row newRow = new Row();
+			Button deleteButton = new Button("Delete");
+			Button viewButton = new Button("View");
+			deleteButton.setStyle("background-color: #D04848; color: #ffffff;");
+			
+			
 			newRow.appendChild(userLable);
 			newRow.appendChild(fruitLable);
+			newRow.appendChild(deleteButton);
+			newRow.appendChild(viewButton);
 
-			Rows rows= displayUser.getRows();
+			Rows rows=  displayUser.getRows();
 			rows.appendChild(newRow);
 
 			inputUserName.setValue("");
 			fruitsRadiogroup.setSelectedIndex(-1);
+			
+			deleteButton.addEventListener("onClick", event ->{
+				rows.removeChild(newRow);
+			});
+			
+			viewButton.addEventListener("onClick", event ->{
+				//Todo
+				Messagebox.show("UserName: "+userName+" "+"Selected Fruit:" + selectedFruit, " Preference Details", Messagebox.OK, Messagebox.EXCLAMATION);
+			});
 
 			//Messagebox.show("Selected Fruit:" + selectedFruit, "Information", Messagebox.OK, Messagebox.EXCLAMATION);
 		}
@@ -67,5 +83,7 @@ public class MyPageComposer extends SelectorComposer<Window> {
 	public void revertColor() {
 		printButton.setStyle("background-color: #0064ed; color: #ffffff; height=30%; width=30%; style= white-space: normal; margin-left: 30%;");
 	}
+	
+	
 
 }

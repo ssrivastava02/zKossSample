@@ -1,18 +1,19 @@
-<?page title="My First Zk" contentType="text/html;charset=UTF-8"?>
+<?page title="My First Zk" contentType="text/html;charset=UTF-8" theme="silvertail"?>
 <zk>
 
-	<window apply="myzkProto1.MyPageComposer" title="Fruit Station!"
-		border="normal">
+	<window apply="myzkProto1.LandingPage" title="Fruit Cart!"
+		border="normal" >
+		<caption image="myzkProto1\src\web\res\29853.jpg"/>
 		<vlayout>
 
 			<div>
 				<groupbox mold="default" width="30%" style="margin-left: 30%;">
-					<caption label="Select Fruits" style="margin-left: 30%;"/>
+					<caption label="Add Favourite" style="margin-left: 30%;"/>
 					<vbox width="100%" height="100%" align="center" >
 						<radiogroup id="fruitsRadiogroup"
 							width="100%" >
-							<radio label="Apple" />
 							<radio label="Orange" />
+							<radio label="Apple" />
 							<radio label="Banana" />
 						</radiogroup>
 					</vbox>
@@ -32,11 +33,14 @@
 					<columns>
 						<column label="UserName" />
 						<column label="FruitSelected" />
+						<column label="Actions" />
 					</columns>
-					<rows></rows>
+					<rows>
+					</rows>
 				</grid>
 			</div>
 
 		</vlayout>
 	</window>
+	<include src="/SecondPage.zul"/>
 </zk>
