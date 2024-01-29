@@ -1,4 +1,4 @@
-package myzkProto1;
+package myzkProto1.model;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.Listen;

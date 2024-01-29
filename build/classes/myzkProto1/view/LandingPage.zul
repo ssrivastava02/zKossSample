@@ -1,7 +1,7 @@
 <?page title="My First Zk" contentType="text/html;charset=UTF-8" theme="silvertail"?>
 <zk>
 
-	<window apply="myzkProto1.LandingPage" title="Fruit Cart!"
+	<window apply="myzkProto1.model.LandingPage" title="Fruit Cart!"
 		border="normal" >
 		<caption image="myzkProto1\src\web\res\29853.jpg"/>
 		<vlayout>
