@@ -1,25 +1,39 @@
 package myzkProto1.model;
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.time.LocalDate;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
+@Table(name = "user")
+
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String firstName;
-	private String lastName;
-	private int phone;
-	private String email;
-	private Date DOB;
-	private String address;
+	
+	@Id @Column(name = "userId") @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+	
+	@Column(name = "firstName") private String firstName;
+	
+	@Column(name = "lastName") private String lastName;
+	
+	@Column(name = "phone") private int phone;
+	
+	@Column(name = "email") private String email;
+	
+	@Column(name = "DOB") private LocalDate DOB;
+	
+	@Column(name = "address") private String address;
 	// Getters and setters
 
-
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -44,10 +58,10 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getDOB() {
+	public LocalDate getDOB() {
 		return DOB;
 	}
-	public void setDOB(Date dOB) {
+	public void setDOB(LocalDate dOB) {
 		DOB = dOB;
 	}
 	public String getAddress() {
@@ -56,5 +70,7 @@ public class User {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	
 }
 
