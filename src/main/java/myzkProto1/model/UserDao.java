@@ -1,4 +1,6 @@
 package myzkProto1.model;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import myzkProto1.util.JpaUtil;
@@ -49,6 +51,18 @@ public class UserDao {
 				session.merge(existingUser);
 			}
 			session.getTransaction().commit();
+		}
+	}
+
+	public List<User> getAllUsers() {
+
+		List<User> userList = null;
+
+		try (Session session = sessionFactory.openSession()){
+			session.beginTransaction();
+			userList = session.createQuery("FROM User", User.class).list();
+			session.getTransaction().commit();
+			return userList;
 		}
 	}
 }

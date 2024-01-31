@@ -1,0 +1,101 @@
+<?page title="My First Zk" contentType="text/html;charset=UTF-8" theme="silvertail"?>
+<zk>
+	<window title="User Screen" border="normal">
+		<caption image="myzkProto1\src\web\res\29853.jpg" />
+		<vlayout>
+			<hlayout hflex="1" valign="middle"
+				style=" margin-left: 30%;">
+				<button id="createUser" label="Create User" height="10%"
+					width="100%" style=" margin-left: 20%;"
+					onClick='popupInputForm.doModal()' />
+
+				<button id="editUser" label="Edit User" height="10%"
+					width="100%" style=" margin-left: 30%;"
+					onClick='popupInputForm.doModal()' />
+
+				<button id="deleteUser" label="Delete User" height="10%"
+					width="100%" style=" margin-left: 30%;" />
+			</hlayout>
+			<window id="popupInputForm" width="40%" height="90%"
+				style="margin-left: 5%;"
+				viewModel="@id('userVM') @init('myzkProto1.viewModel.UserVM')">
+				<borderlayout>
+					<center>
+						<vbox>
+							User Info
+							<grid>
+								<rows>
+									<row>
+										FirstName
+										<textbox
+											value="@bind(userVM.newUser.firstName)" width="100%" />
+									</row>
+									<row>
+										LastName
+										<textbox
+											value="@bind(userVM.newUser.lastName)" width="150px" />
+									</row>
+									<row>
+										Phone:
+										<intbox
+											constraint="no negative,no zero" width="150px"
+											value="@bind(userVM.newUser.phone)" />
+									</row>
+									<row>
+										DOB:
+										<datebox id="db"
+											value="@bind(userVM.newUser.DOB)" width="150px" />
+									</row>
+									<row>
+										Address
+										<textbox
+											value="@bind(userVM.newUser.address)" width="150px" />
+									</row>
+									<row>
+										E-mail:
+										<textbox width="150px"
+											value="@bind(userVM.newUser.email)"
+											constraint="/.+@.+\.[a-z]+/: Please enter an e-mail address" />
+									</row>
+								</rows>
+							</grid>
+							<hbox style=" margin-left: 30%;">
+								<button label="Submit"
+									onClick="@command('createUser')" />
+								<button label="Cancel"
+									onClick="popupInputForm.setVisible(false)" />
+							</hbox>
+						</vbox>
+					</center>
+				</borderlayout>
+			</window>
+
+			<div>
+				<grid id="displayUser" width="70%" mold="paging"
+					pageSize="4" style="margin-left: 15%;">
+					<columns>
+						<column label="UserID" />
+						<column label="FirstName" />
+						<column label="LastName" />
+						<column label="Address" />
+						<column label="Email" />
+						<column label="Date Of Birth" />
+						<column label="Phone" />
+					</columns>
+					<rows>
+						<row forEach="${userVM.userList}">
+							<label value="@load(each.id)" />
+							<label value="@load(each.firstName)" />
+							<label value="@load(each.lastName)" />
+							<label value="@load(each.address)" />
+							<label value="@load(each.email)" />
+							<label value="@load(each.DOB)" />
+							<label value="@load(each.phone)" />
+						</row>
+					</rows>
+				</grid>
+			</div>
+		</vlayout>
+	</window>
+
+</zk>
