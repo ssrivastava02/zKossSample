@@ -46,4 +46,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>index.zul</welcome-file>
   </welcome-file-list>
+ <context-param>
+    <param-name>org.zkoss.zk.ui.enableInspector</param-name>
+    <param-value>true</param-value>
+</context-param>
+
 </web-app>

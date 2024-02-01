@@ -1,7 +1,9 @@
 <?page title="My First Zk" contentType="text/html;charset=UTF-8" theme="silvertail"?>
 <zk>
-	<window title="User Screen" border="normal">
+	<window title="User Screen" border="normal"
+		viewModel="@id('userVM') @init('myzkProto1.viewModel.UserVM')">
 		<caption image="myzkProto1\src\web\res\29853.jpg" />
+
 		<vlayout>
 			<hlayout hflex="1" valign="middle"
 				style=" margin-left: 30%;">
@@ -14,7 +16,8 @@
 					onClick='popupInputForm.doModal()' />
 
 				<button id="deleteUser" label="Delete User" height="10%"
-					width="100%" style=" margin-left: 30%;" />
+					width="100%" style=" margin-left: 30%;"
+					onClick="@command('deleteUser')" />
 			</hlayout>
 			<window id="popupInputForm" width="40%" height="90%"
 				style="margin-left: 5%;"
@@ -71,31 +74,40 @@
 			</window>
 
 			<div>
-				<grid id="displayUser" width="70%" mold="paging"
-					pageSize="4" style="margin-left: 15%;">
+
+				<grid id="displayUser" width="80%" mold="paging"
+					pageSize="5" style="margin-left: 10%;">
 					<columns>
-						<column label="UserID" />
-						<column label="FirstName" />
-						<column label="LastName" />
-						<column label="Address" />
-						<column label="Email" />
-						<column label="Date Of Birth" />
-						<column label="Phone" />
+						<column label="#" width="8%"/>
+						<column label="UserID" sort="auto"  width="10%" sortDirection="ascending"/>
+						<column label="FirstName" sort="auto" sortDirection="ascending"/>
+						<column label="LastName" sort="auto" sortDirection="ascending"/>
+						<column label="Address" sort="auto" sortDirection="ascending"/>
+						<column label="Email" sort="auto" sortDirection="ascending"/>
+						<column label="Date Of Birth" width="12%" sort="auto" sortDirection="ascending"/>
+						<column label="Phone" sort="auto" sortDirection="ascending"/>
 					</columns>
 					<rows>
-						<row forEach="${userVM.userList}">
-							<label value="@load(each.id)" />
-							<label value="@load(each.firstName)" />
-							<label value="@load(each.lastName)" />
-							<label value="@load(each.address)" />
-							<label value="@load(each.email)" />
-							<label value="@load(each.DOB)" />
-							<label value="@load(each.phone)" />
-						</row>
+						<forEach items="${userVM.userList}">
+							<row  value="@load(each)">
+								<cell >
+									<checkbox 
+										checked="@bind(each.selected)" />
+								</cell>
+								<label value="@load(each.id)" />
+								<label value="@load(each.firstName)" />
+								<label value="@load(each.lastName)" />
+								<label value="@load(each.address)" />
+								<label value="@load(each.email)" />
+								<label value="@load(each.DOB)"  style="white-space: nowrap;"/>
+								<label value="@load(each.phone)" />
+							</row>
+						</forEach>
 					</rows>
+
 				</grid>
+
 			</div>
 		</vlayout>
 	</window>
-
 </zk>
