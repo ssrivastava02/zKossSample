@@ -6,7 +6,9 @@ import myzkProto1.model.UserDao;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.*;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Events;
@@ -18,32 +20,34 @@ import org.zkoss.zul.Window;
 
 public class UserVM { 
 
-
 	private UserDao userDao;
-
 	private User newUser;
 	private User selectedUserToDelete;
 	private List<User> userList;
-
-	@Wire("#popupInputForm")
-	private Window popupInputForm;
-
 
 	@Init
 	public void init() {
 		newUser = new User();
 		userDao = new UserDao();
 		loadUsers();
+		
 	}
+	
+	
 
 	@Command
 	@NotifyChange("userList")
-	public void createUser() {
+	public void createUser(@ContextParam(ContextType.VIEW) Component view) {
 		userDao.createUser(newUser);
 		// Add any necessary post-creation logic or UI updates
 		loadUsers();
+
 		newUser = new User(); // Clear the newUser object for next creation
-		closePopup();
+
+		if (view instanceof Window) {
+			((Window) view).setVisible(false);
+			Executions.sendRedirect(null);
+		}
 
 
 	}
@@ -56,7 +60,48 @@ public class UserVM {
 			userDao.deleteUser(user.getId());
 		}
 		loadUsers();
+
 	}
+
+	@Command
+	@NotifyChange("newUser")
+	public void fetchUserData() {
+	    // Find the selected user
+	    User selectedUser = null;
+	    for (User user : userList) {
+	        if (user.isSelected()) {
+	            // Ensure only one user is selected
+	            if (selectedUser != null) {
+	                // If more than one user is selected, show a message and return
+	                Messagebox.show("Please select only one user to fetch data.");
+	                return;
+	            }
+	            selectedUser = user;
+	        }
+	    }
+
+	    // If no user is selected, show a message and return
+	    if (selectedUser == null) {
+	        Messagebox.show("Please select a user to fetch data.");
+	        return;
+	    }
+
+	    // Fetch user data
+	    User viewUser = userDao.getUserById(selectedUser.getId()); 
+	    if (viewUser != null) {
+	        // Populate text-boxes with user data
+	        newUser.setFirstName(viewUser.getFirstName());
+	        newUser.setLastName(viewUser.getLastName());
+	        newUser.setPhone(viewUser.getPhone());
+	        newUser.setDOB(viewUser.getDOB());
+	        newUser.setAddress(viewUser.getAddress());
+	        newUser.setEmail(viewUser.getEmail());
+	    } else {
+	        // Handle case where user data is not found
+	        Messagebox.show("User data not found for ID: " + selectedUser.getId());
+	    }
+	}
+
 
 	// Find the selected user by ID from the user list
 	@Command
@@ -64,21 +109,14 @@ public class UserVM {
 		user.setSelected(!user.isSelected()); 
 	}
 
-	public void closePopup() 
-	{ 
-		if (popupInputForm != null) 
-		{
-			popupInputForm.setVisible(false);
-			Messagebox.show("User Added Successfully!","Information", Messagebox.OK, Messagebox.EXCLAMATION); 
-		} 
-
-	}
 
 
 	@NotifyChange("userList")
 	public void loadUsers() {
 		userList = userDao.getAllUsers(); // Fetch all users from the database
+
 	}
+
 
 	public List<User> getUserList() {
 		return userList;

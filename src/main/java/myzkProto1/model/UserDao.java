@@ -54,6 +54,18 @@ public class UserDao {
 		}
 	}
 
+	public User getUserById(Long userId) {
+
+		User user = null;
+		try(Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			user = session.getReference(User.class, userId);
+			session.getTransaction().commit();
+		}
+		return user;
+	}
+
+
 	public List<User> getAllUsers() {
 
 		List<User> userList = null;

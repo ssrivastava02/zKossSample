@@ -1,6 +1,7 @@
 <?page title="My First Zk" contentType="text/html;charset=UTF-8" theme="silvertail"?>
 <zk>
 	<window title="User Screen" border="normal"
+		apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('userVM') @init('myzkProto1.viewModel.UserVM')">
 		<caption image="myzkProto1\src\web\res\29853.jpg" />
 
@@ -13,14 +14,15 @@
 
 				<button id="editUser" label="Edit User" height="10%"
 					width="100%" style=" margin-left: 30%;"
-					onClick='popupInputForm.doModal()' />
+					onClick="popupInputForm.doModal();"/>
 
 				<button id="deleteUser" label="Delete User" height="10%"
 					width="100%" style=" margin-left: 30%;"
 					onClick="@command('deleteUser')" />
 			</hlayout>
 			<window id="popupInputForm" width="40%" height="90%"
-				style="margin-left: 5%;"
+				mode="modal" visible="false" style="margin-left: 5%;"
+				apply="org.zkoss.bind.BindComposer"
 				viewModel="@id('userVM') @init('myzkProto1.viewModel.UserVM')">
 				<borderlayout>
 					<center>
@@ -76,33 +78,41 @@
 			<div>
 
 				<grid id="displayUser" width="80%" mold="paging"
-					pageSize="5" style="margin-left: 10%;">
+					pageSize="5" style="margin-left: 10%;" model="@load(userVM.userList)">
 					<columns>
-						<column label="#" width="8%"/>
-						<column label="UserID" sort="auto"  width="10%" sortDirection="ascending"/>
-						<column label="FirstName" sort="auto" sortDirection="ascending"/>
-						<column label="LastName" sort="auto" sortDirection="ascending"/>
-						<column label="Address" sort="auto" sortDirection="ascending"/>
-						<column label="Email" sort="auto" sortDirection="ascending"/>
-						<column label="Date Of Birth" width="12%" sort="auto" sortDirection="ascending"/>
-						<column label="Phone" sort="auto" sortDirection="ascending"/>
+						<column label="#" width="8%" />
+						<column label="UserID" sort="auto" width="10%"
+							sortDirection="ascending" />
+						<column label="FirstName" sort="auto"
+							sortDirection="ascending" />
+						<column label="LastName" sort="auto"
+							sortDirection="ascending" />
+						<column label="Address" sort="auto"
+							sortDirection="ascending" />
+						<column label="Email" sort="auto"
+							sortDirection="ascending" />
+						<column label="Date Of Birth" width="12%"
+							sort="auto" sortDirection="ascending" />
+						<column label="Phone" sort="auto"
+							sortDirection="ascending" />
 					</columns>
 					<rows>
-						<forEach items="${userVM.userList}">
-							<row  value="@load(each)">
-								<cell >
-									<checkbox 
-										checked="@bind(each.selected)" />
+						<template name="model" var="user">
+							<row value="@load(each)">
+								<cell>
+									<checkbox
+										checked="@bind(user.selected)" />
 								</cell>
-								<label value="@load(each.id)" />
-								<label value="@load(each.firstName)" />
-								<label value="@load(each.lastName)" />
-								<label value="@load(each.address)" />
-								<label value="@load(each.email)" />
-								<label value="@load(each.DOB)"  style="white-space: nowrap;"/>
-								<label value="@load(each.phone)" />
+								<label value="@load(user.id)" />
+								<label value="@load(user.firstName)" />
+								<label value="@load(user.lastName)" />
+								<label value="@load(user.address)" />
+								<label value="@load(user.email)" />
+								<label value="@load(user.DOB)"
+									style="white-space: nowrap;" />
+								<label value="@load(user.phone)" />
 							</row>
-						</forEach>
+						 </template>
 					</rows>
 
 				</grid>
