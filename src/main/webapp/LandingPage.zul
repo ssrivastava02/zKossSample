@@ -10,20 +10,19 @@
 				style=" margin-left: 30%;">
 				<button id="createUser" label="Create User" height="10%"
 					width="100%" style=" margin-left: 20%;"
-					onClick='popupInputForm.doModal()' />
+					onClick="@command('openModal')" />
 
 				<button id="editUser" label="Edit User" height="10%"
 					width="100%" style=" margin-left: 30%;"
-					onClick="popupInputForm.doModal();"/>
+					onClick="@command('fetchUserData')"/>
 
 				<button id="deleteUser" label="Delete User" height="10%"
 					width="100%" style=" margin-left: 30%;"
 					onClick="@command('deleteUser')" />
 			</hlayout>
 			<window id="popupInputForm" width="40%" height="90%"
-				mode="modal" visible="false" style="margin-left: 5%;"
-				apply="org.zkoss.bind.BindComposer"
-				viewModel="@id('userVM') @init('myzkProto1.viewModel.UserVM')">
+				mode="modal" visible="@load(userVM.showModal)" style="margin-left: 5%;"
+				>
 				<borderlayout>
 					<center>
 						<vbox>
@@ -68,7 +67,7 @@
 								<button label="Submit"
 									onClick="@command('createUser')" />
 								<button label="Cancel"
-									onClick="popupInputForm.setVisible(false)" />
+									onClick="@command('closeModal')" />
 							</hbox>
 						</vbox>
 					</center>

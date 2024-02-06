@@ -20,7 +20,11 @@ import org.zkoss.zul.Window;
 
 public class UserVM { 
 
+	/*
+	 * @Wire("#popupInputForm") private Window popupInputForm;
+	 */
 	private UserDao userDao;
+	private boolean showModal = false;
 	private User newUser;
 	private User selectedUserToDelete;
 	private List<User> userList;
@@ -30,25 +34,19 @@ public class UserVM {
 		newUser = new User();
 		userDao = new UserDao();
 		loadUsers();
-		
+
 	}
-	
-	
+
+
 
 	@Command
 	@NotifyChange("userList")
-	public void createUser(@ContextParam(ContextType.VIEW) Component view) {
+	public void createUser() {
 		userDao.createUser(newUser);
 		// Add any necessary post-creation logic or UI updates
 		loadUsers();
-
 		newUser = new User(); // Clear the newUser object for next creation
-
-		if (view instanceof Window) {
-			((Window) view).setVisible(false);
-			Executions.sendRedirect(null);
-		}
-
+		closeModal();
 
 	}
 
@@ -66,40 +64,42 @@ public class UserVM {
 	@Command
 	@NotifyChange("newUser")
 	public void fetchUserData() {
-	    // Find the selected user
-	    User selectedUser = null;
-	    for (User user : userList) {
-	        if (user.isSelected()) {
-	            // Ensure only one user is selected
-	            if (selectedUser != null) {
-	                // If more than one user is selected, show a message and return
-	                Messagebox.show("Please select only one user to fetch data.");
-	                return;
-	            }
-	            selectedUser = user;
-	        }
-	    }
 
-	    // If no user is selected, show a message and return
-	    if (selectedUser == null) {
-	        Messagebox.show("Please select a user to fetch data.");
-	        return;
-	    }
+		//popupInputForm.doModal();
+		// Find the selected user
+		User selectedUser = null;
+		for (User user : userList) {
+			if (user.isSelected()) {
+				// Ensure only one user is selected
+				if (selectedUser != null) {
+					// If more than one user is selected, show a message and return
+					Messagebox.show("Please select only one user to fetch data.");
+					return;
+				}
+				selectedUser = user;
+			}
+		}
 
-	    // Fetch user data
-	    User viewUser = userDao.getUserById(selectedUser.getId()); 
-	    if (viewUser != null) {
-	        // Populate text-boxes with user data
-	        newUser.setFirstName(viewUser.getFirstName());
-	        newUser.setLastName(viewUser.getLastName());
-	        newUser.setPhone(viewUser.getPhone());
-	        newUser.setDOB(viewUser.getDOB());
-	        newUser.setAddress(viewUser.getAddress());
-	        newUser.setEmail(viewUser.getEmail());
-	    } else {
-	        // Handle case where user data is not found
-	        Messagebox.show("User data not found for ID: " + selectedUser.getId());
-	    }
+		// If no user is selected, show a message and return
+		if (selectedUser == null) {
+			Messagebox.show("Please select a user to fetch data.");
+			return;
+		}
+
+		// Fetch user data
+		User viewUser = userDao.getUserById(selectedUser.getId()); 
+		if (viewUser != null) {
+			// Populate text-boxes with user data
+			newUser.setFirstName(viewUser.getFirstName());
+			newUser.setLastName(viewUser.getLastName());
+			newUser.setPhone(viewUser.getPhone());
+			newUser.setDOB(viewUser.getDOB());
+			newUser.setAddress(viewUser.getAddress());
+			newUser.setEmail(viewUser.getEmail());
+		} else {
+			// Handle case where user data is not found
+			Messagebox.show("User data not found for ID: " + selectedUser.getId());
+		}
 	}
 
 
@@ -117,6 +117,21 @@ public class UserVM {
 
 	}
 
+	@Command
+	@NotifyChange("showModal")
+	public void openModal() {
+		showModal = true;
+	}
+
+	@Command
+	@NotifyChange("showModal")
+	public void closeModal() {
+		showModal = false;
+	}
+
+	public boolean isShowModal() {
+		return showModal;
+	}
 
 	public List<User> getUserList() {
 		return userList;
