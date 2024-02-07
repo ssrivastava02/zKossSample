@@ -59,7 +59,7 @@ public class UserDao {
 		User user = null;
 		try(Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
-			user = session.getReference(User.class, userId);
+			user = session.get(User.class, userId);
 			session.getTransaction().commit();
 		}
 		return user;

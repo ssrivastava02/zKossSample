@@ -20,11 +20,10 @@ import org.zkoss.zul.Window;
 
 public class UserVM { 
 
-	/*
-	 * @Wire("#popupInputForm") private Window popupInputForm;
-	 */
+	
 	private UserDao userDao;
 	private boolean showModal = false;
+	//private boolean editMode = false;
 	private User newUser;
 	private User selectedUserToDelete;
 	private List<User> userList;
@@ -37,15 +36,30 @@ public class UserVM {
 
 	}
 
-
+	/*
+	 * @Command public void submit() { if (editMode) { updateUser(); // Execute
+	 * method for saving edited user information } else { createUser(); // Execute
+	 * method for creating a new user } }
+	 */
 
 	@Command
-	@NotifyChange("userList")
+	@NotifyChange({"userList", "showModal"})
 	public void createUser() {
 		userDao.createUser(newUser);
 		// Add any necessary post-creation logic or UI updates
 		loadUsers();
-		newUser = new User(); // Clear the newUser object for next creation
+		 // Clear the newUser object for next creation
+		closeModal();
+
+	}
+	
+	@Command
+	@NotifyChange({"userList", "showModal"})
+	public void updateUser() {
+		userDao.updateUser(newUser);
+		// Add any necessary post-creation logic or UI updates
+		loadUsers();
+		 // Clear the newUser object for next creation
 		closeModal();
 
 	}
@@ -62,10 +76,10 @@ public class UserVM {
 	}
 
 	@Command
-	@NotifyChange("newUser")
+	@NotifyChange({"newUser", "showModal"})
 	public void fetchUserData() {
 
-		//popupInputForm.doModal();
+		newUser = new User();
 		// Find the selected user
 		User selectedUser = null;
 		for (User user : userList) {
@@ -74,6 +88,7 @@ public class UserVM {
 				if (selectedUser != null) {
 					// If more than one user is selected, show a message and return
 					Messagebox.show("Please select only one user to fetch data.");
+					 //setEditMode(false); 
 					return;
 				}
 				selectedUser = user;
@@ -83,6 +98,7 @@ public class UserVM {
 		// If no user is selected, show a message and return
 		if (selectedUser == null) {
 			Messagebox.show("Please select a user to fetch data.");
+			 //setEditMode(false); 
 			return;
 		}
 
@@ -96,6 +112,8 @@ public class UserVM {
 			newUser.setDOB(viewUser.getDOB());
 			newUser.setAddress(viewUser.getAddress());
 			newUser.setEmail(viewUser.getEmail());
+			 openModal();
+			 //setEditMode(true); 
 		} else {
 			// Handle case where user data is not found
 			Messagebox.show("User data not found for ID: " + selectedUser.getId());
@@ -124,9 +142,10 @@ public class UserVM {
 	}
 
 	@Command
-	@NotifyChange("showModal")
+	@NotifyChange({"showModal", "newUser"})
 	public void closeModal() {
 		showModal = false;
+		setNewUser(new User());
 	}
 
 	public boolean isShowModal() {
@@ -153,5 +172,11 @@ public class UserVM {
 	public void setSelectedUserToDelete(User selectedUserToDelete) {
 		this.selectedUserToDelete = selectedUserToDelete;
 	}
+	 // Getter and setter for editMode property
+		/*
+		 * public boolean isEditMode() { return editMode; }
+		 * 
+		 * public void setEditMode(boolean editMode) { this.editMode = editMode; }
+		 */
 }
 
